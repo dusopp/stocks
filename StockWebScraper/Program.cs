@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stock
+namespace StockWebScraper
 {
     class Program
     {
