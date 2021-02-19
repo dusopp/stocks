@@ -21,16 +21,13 @@ namespace StockWebScraper.Clients
 
         public UnemploymentClient(HttpClient httpClient)
         {
-            this.httpClient = httpClient;
-
-            //this.httpClient.BaseAddress = new Uri("http://localhost:57863");
+            this.httpClient = httpClient;           
             this.httpClient.Timeout = new TimeSpan(0, 0, 30);
-            this.httpClient.DefaultRequestHeaders.Clear();
-            
+            this.httpClient.DefaultRequestHeaders.Clear();            
         }
 
 
-        public async Task<Root> GetEmploymentSituationArchivedNewsReleases(CancellationToken cancellationToken)
+        public async Task<Root> Get(CancellationToken cancellationToken)
         {
 
             var movieToUpdate = new SeriesPost()

@@ -55,8 +55,7 @@ namespace StockWebScraper
             );
 
             serviceCollection.AddLogging();
-
-            //serviceCollection.AddHttpClient();
+            
 
             serviceCollection
                 .AddHttpClient<UnemploymentClient>()

@@ -23,7 +23,7 @@ namespace StockWebScraper.Services
 
         public async Task Run()
         {
-            var unemploymentData = await unemploymentClient.GetEmploymentSituationArchivedNewsReleases(_cancellationTokenSource.Token);
+            var unemploymentData = await unemploymentClient.Get(_cancellationTokenSource.Token);
 
             //logger.LogDebug(test);
         }
