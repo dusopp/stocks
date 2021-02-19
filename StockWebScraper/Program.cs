@@ -1,7 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using StockWebScraper.Clients;
 using System;
 using System.Threading.Tasks;
+using System.Net.Http;
+using StockWebScraper.Services;
+using StockWebScraper.Common;
 
 namespace StockWebScraper
 {
@@ -25,7 +29,9 @@ namespace StockWebScraper
                 // await this call to ensure the application doesn't 
                 // prematurely exit.
                 //await serviceProvider.GetService<IIntegrationService>().Run();
-                throw new Exception("Hovno");
+
+                await serviceProvider.GetService<UnemploymentService>().Run();
+                
             }
             catch (Exception generalException)
             {
@@ -35,7 +41,7 @@ namespace StockWebScraper
                     "An exception happened while running the integration service.");                
             }
 
-            Console.ReadKey();
+           // Console.ReadKey();
         }
 
         private static void ConfigureServices(IServiceCollection serviceCollection)
@@ -49,64 +55,21 @@ namespace StockWebScraper
             );
 
             serviceCollection.AddLogging();
+            
 
-            //serviceCollection.AddHttpClient("MoviesClient", client =>
-            //{
-            //    client.BaseAddress = new Uri("http://localhost:57863");
-            //    client.Timeout = new TimeSpan(0, 0, 30);
-            //    client.DefaultRequestHeaders.Clear();
-            //})
-            //.AddHttpMessageHandler(handler => new TimeOutDelegatingHandler(TimeSpan.FromSeconds(20)))
-            //.AddHttpMessageHandler(handler => new RetryPolicyDelegatingHandler(2))
-            //.ConfigurePrimaryHttpMessageHandler(handler =>
-            //new HttpClientHandler()
-            //{
-            //    AutomaticDecompression = System.Net.DecompressionMethods.GZip
-            //});
+            serviceCollection
+                .AddHttpClient<UnemploymentClient>()
+                .AddHttpMessageHandler(handler => new TimeOutDelegatingHandler(TimeSpan.FromSeconds(20)))
+                .AddHttpMessageHandler(handler => new RetryPolicyDelegatingHandler(2))
+                .ConfigurePrimaryHttpMessageHandler(handler =>
+                new HttpClientHandler()
+                {
+                    AutomaticDecompression = System.Net.DecompressionMethods.GZip
+                });
 
-            ////serviceCollection.AddHttpClient<MoviesClient>(client =>
-            ////{
-            ////    client.BaseAddress = new Uri("http://localhost:57863");
-            ////    client.Timeout = new TimeSpan(0, 0, 30);
-            ////    client.DefaultRequestHeaders.Clear();
-            ////}
-            ////).ConfigurePrimaryHttpMessageHandler(handler =>
-            ////new HttpClientHandler()
-            ////{
-            ////    AutomaticDecompression = System.Net.DecompressionMethods.GZip
-            ////});
+            serviceCollection.AddScoped<UnemploymentService>();
 
-            //serviceCollection.AddHttpClient<MoviesClient>()
-            //    .ConfigurePrimaryHttpMessageHandler(handler =>
-            //       new HttpClientHandler()
-            //       {
-            //           AutomaticDecompression = System.Net.DecompressionMethods.GZip
-            //       });
-
-
-            //// register the integration service on our container with a 
-            //// scoped lifetime
-
-            //// For the CRUD demos
-            //// serviceCollection.AddScoped<IIntegrationService, CRUDService>();
-
-            //// For the partial update demos
-            //// serviceCollection.AddScoped<IIntegrationService, PartialUpdateService>();
-
-            //// For the stream demos
-            //// serviceCollection.AddScoped<IIntegrationService, StreamService>();
-
-            //// For the cancellation demos
-            //// serviceCollection.AddScoped<IIntegrationService, CancellationService>();
-
-            //// For the HttpClientFactory demos
-            //// serviceCollection.AddScoped<IIntegrationService, HttpClientFactoryInstanceManagementService>();
-
-            //// For the dealing with errors and faults demos
-            //// serviceCollection.AddScoped<IIntegrationService, DealingWithErrorsAndFaultsService>();
-
-            //// For the custom http handlers demos
-            //serviceCollection.AddScoped<IIntegrationService, HttpHandlersService>();
+           
         }
 
     }
